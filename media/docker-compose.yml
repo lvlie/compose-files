@@ -1,0 +1,108 @@
+version: '3'
+
+services:
+  sabnzbd:
+    container_name: sabnzbd
+    hostname: sabnzbd
+    image: docker.io/linuxserver/sabnzbd:latest
+    domainname: ${DOMAIN}
+    ports:
+      - "8080:8080"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /config/sabnzbd/:/config/
+      - /scratch/incomplete:/incomplete-downloads/
+      - /scratch/complete:/downloads/
+      - /data/:/data
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Amsterdam
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=027
+  plex:
+    container_name: plex
+    hostname: plex
+    image: docker.io/linuxserver/plex:latest
+    domainname: ${DOMAIN}
+    network_mode: "host"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /config/plex/:/config/
+      - /config/plex/temp/Transcode/:/transcode/
+      - /data/:/data/
+    devices:
+      - /dev/dri:/dev/dri
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Amsterdam
+      - PUID=1000
+      - PGID=1000
+  tautulli:
+    container_name: tautulli
+    hostname: tautulli
+    image: docker.io/linuxserver/tautulli:latest
+    domainname: ${DOMAIN}
+    ports:
+      - "8181:8181/tcp"
+    volumes:
+      - /config/plexpy/:/config
+      - /config/plex/Library/Logs/:/logs:ro
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Amsterdam
+      - PUID=1000
+      - PGID=1000
+  sonarr:
+    container_name: sonarr
+    hostname: sonarr
+    image: docker.io/linuxserver/sonarr:preview
+    domainname: ${DOMAIN}
+    ports:
+      - "8989:8989/tcp"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /config/sonarr/:/config/
+      - /data/TV/:/tv/
+      - /scratch/complete:/downloads/
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Amsterdam
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+  radarr:
+    container_name: radarr
+    hostname: radarr
+    image: docker.io/linuxserver/radarr:latest
+    domainname: ${DOMAIN}
+    ports:
+      - "7878:7878/tcp"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /config/radarr/:/config/
+      - /data/Movies/:/movies/
+      - /scratch/complete:/downloads/
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Amsterdam
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+  bazarr:
+    container_name: bazarr
+    hostname: bazarr
+    image: docker.io/linuxserver/bazarr:latest
+    domainname: ${DOMAIN}
+    environment:
+      - TZ=Europe/Amsterdam
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+    volumes:
+      - /config/bazarr/:/config/
+      - /data/TV/:/tv/
+      - /data/Movies/:/movies/
+    ports:
+      - 6767:6767
+    restart: unless-stopped

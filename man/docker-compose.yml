@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  swag:
+    container_name: swag
+    hostname: swag
+    domainname: ${DOMAIN}
+    image: docker.io/linuxserver/swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - URL=${DOMAIN}
+      - SUBDOMAINS=${SUBDOMAINS}
+      - VALIDATION=http
+      - EMAIL=${EMAIL}
+    volumes:
+      - /config/swag:/config
+    ports:
+      - 443:443
+      - 80:80 #optional
+    restart: unless-stopped
+  unifi:
+    container_name: unifi
+    hostname: unifi
+    domainname: ${DOMAIN}
+    image: docker.io/linuxserver/unifi-controller:latest
+    ports:
+      - "10001:10001/udp"
+      - "8080:8080"
+      - "8081:8081"
+      - "8443:8443"
+      - "8843:8843"
+      - "8880:8880"
+      - "3478:3478/udp"
+      - "6789:6789"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /config/unifi/:/config
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Amsterdam
+      - PUID=1000
+      - PGID=1000
