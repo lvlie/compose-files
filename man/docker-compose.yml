@@ -44,3 +44,11 @@ services:
       - TZ=Europe/Amsterdam
       - PUID=1000
       - PGID=1000
+  authelia:
+    image: authelia/authelia:latest
+    container_name: authelia
+    environment:
+      - TZ=Europe/Amsterdam
+    volumes:
+      - /config/authelia:/config
+    restart: unless-stopped
