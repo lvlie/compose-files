@@ -4,7 +4,7 @@ services:
   sabnzbd:
     container_name: sabnzbd
     hostname: sabnzbd
-    image: docker.io/linuxserver/sabnzbd:latest
+    image: ghcr.io/linuxserver/sabnzbd:latest
     domainname: ${DOMAIN}
     ports:
       - "8080:8080"
@@ -23,7 +23,7 @@ services:
   plex:
     container_name: plex
     hostname: plex
-    image: docker.io/linuxserver/plex:latest
+    image: ghcr.io/linuxserver/plex:latest
     domainname: ${DOMAIN}
     network_mode: "host"
     volumes:
@@ -41,7 +41,7 @@ services:
   tautulli:
     container_name: tautulli
     hostname: tautulli
-    image: docker.io/linuxserver/tautulli:latest
+    image: ghcr.io/linuxserver/tautulli:latest
     domainname: ${DOMAIN}
     ports:
       - "8181:8181/tcp"
@@ -56,7 +56,7 @@ services:
   sonarr:
     container_name: sonarr
     hostname: sonarr
-    image: docker.io/linuxserver/sonarr:preview
+    image: ghcr.io/linuxserver/sonarr:latest
     domainname: ${DOMAIN}
     ports:
       - "8989:8989/tcp"
@@ -74,7 +74,7 @@ services:
   radarr:
     container_name: radarr
     hostname: radarr
-    image: docker.io/linuxserver/radarr:latest
+    image: ghcr.io/linuxserver/radarr:latest
     domainname: ${DOMAIN}
     ports:
       - "7878:7878/tcp"
@@ -92,7 +92,7 @@ services:
   bazarr:
     container_name: bazarr
     hostname: bazarr
-    image: docker.io/linuxserver/bazarr:latest
+    image: ghcr.io/linuxserver/bazarr:latest
     domainname: ${DOMAIN}
     environment:
       - TZ=Europe/Amsterdam

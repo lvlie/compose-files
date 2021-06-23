@@ -4,7 +4,7 @@ services:
   duplicati:
     container_name: duplicati
     hostname: duplicati
-    image: docker.io/linuxserver/duplicati:latest
+    image: ghcr.io/linuxserver/duplicati:latest
     ports:
       - "8200:8200"
     volumes:
