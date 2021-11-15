@@ -1,0 +1,17 @@
+---
+version: "3"
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    ports:
+      - 25565:25565
+    volumes:
+      - "/config:/data"
+    environment:
+      - TZ=Europe/Amsterdam
+      - EULA=TRUE
+      - ALLOW_NETHER=true
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
