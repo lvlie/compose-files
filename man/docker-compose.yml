@@ -48,7 +48,7 @@ services:
       #      - 67:67/udp # DHCP
       #      - 67:67/tcp # DHCP
       #      - 68:68/udp # DHCP
-      #      - 80:80/tcp # HTTP(S)
+      - 80:80/tcp # HTTP(S)
       #      - 443:443/tcp # (DNS-over-)HTTPS
       #      - 784:784/udp # DNS-over-QUIC
       #      - 853:853/tcp # DNS-over-TLS
