@@ -25,8 +25,36 @@ services:
   authelia:
     image: authelia/authelia:latest
     container_name: authelia
+    hostname: authelia
+    domainname: ${DOMAIN}
     environment:
       - TZ=Europe/Amsterdam
     volumes:
       - /config/authelia:/config
+    restart: unless-stopped
+  adguard:
+    image: adguard/adguardhome:latest
+    container_name: adguard
+    hostname: adguard
+    domainname: ${DOMAIN}
+    environment:
+      - TZ=Europe/Amsterdam
+    volumes:
+      - /config/adguard/conf:/opt/adguardhome/conf
+      - /config/adguard/work:/opt/adguardhome/work
+    ports:
+      - 53:53/tcp # DNS
+      - 53:53/udp # DNS
+      #      - 67:67/udp # DHCP
+      #      - 67:67/tcp # DHCP
+      #      - 68:68/udp # DHCP
+      #      - 80:80/tcp # HTTP(S)
+      #      - 443:443/tcp # (DNS-over-)HTTPS
+      #      - 784:784/udp # DNS-over-QUIC
+      #      - 853:853/tcp # DNS-over-TLS
+      #      - 853:853/udp # DNS-over-QUIC
+      - 3000:3000/tcp # Frontend
+      #      - 5443:5443/tcp # DNSCrypt
+      #      - 5443:5443/udp # DNSCrypt
+      #      - 8853:8853/udp # DNS-over-QUIC
     restart: unless-stopped
