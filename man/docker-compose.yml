@@ -14,7 +14,8 @@ services:
       - TZ=Europe/Amsterdam
       - URL=${DOMAIN}
       - SUBDOMAINS=${SUBDOMAINS}
-      - VALIDATION=http
+      - VALIDATION=dns
+      - DNSPLUGIN=${DNSPLUGIN}
       - EMAIL=${EMAIL}
     volumes:
       - /config/swag:/config
