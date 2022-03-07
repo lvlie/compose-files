@@ -20,7 +20,7 @@ services:
       - /config/swag:/config
     ports:
       - 443:443
-      - 80:80 #optional
+    #      - 80:80 #optional
     restart: unless-stopped
   authelia:
     image: authelia/authelia:latest
