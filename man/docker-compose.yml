@@ -59,3 +59,11 @@ services:
       #      - 5443:5443/udp # DNSCrypt
       #      - 8853:8853/udp # DNS-over-QUIC
     restart: unless-stopped
+  tunnel:
+    container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CFTUNNELTOKEN}
+
