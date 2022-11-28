@@ -60,10 +60,12 @@ services:
       #      - 8853:8853/udp # DNS-over-QUIC
     restart: unless-stopped
   tunnel:
-    container_name: cloudflared-tunnel
     image: cloudflare/cloudflared
+    container_name: cftunnel
+    hostname: cftunnel
+    domainname: ${DOMAIN}
     restart: unless-stopped
     command: tunnel run
     environment:
+      - TZ=Europe/Amsterdam
       - TUNNEL_TOKEN=${CFTUNNELTOKEN}
-
