@@ -23,16 +23,6 @@ services:
       - 443:443
     #      - 80:80 #optional
     restart: unless-stopped
-  authelia:
-    image: authelia/authelia:latest
-    container_name: authelia
-    hostname: authelia
-    domainname: ${DOMAIN}
-    environment:
-      - TZ=Europe/Amsterdam
-    volumes:
-      - /config/authelia:/config
-    restart: unless-stopped
   adguard:
     image: adguard/adguardhome:latest
     container_name: adguard
