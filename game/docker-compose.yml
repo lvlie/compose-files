@@ -42,3 +42,18 @@ services:
     tty: true
     stdin_open: true
     restart: unless-stopped
+  acc:
+    container_name: acc
+    hostname: acc
+    image: gotzl/accservermanager
+    ports:
+     - 9232:9232/tcp
+     - 9231:9231/udp
+     - 8000:8000
+    volumes:
+     - /config/acc/server:/server
+     - /config/acc/data:/data
+    environment:
+     - ALLOWED_HOSTS=["*"]
+     - SECRET_KEY=${ACCSECRET}
+
