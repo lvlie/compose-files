@@ -30,7 +30,7 @@ services:
   plex:
     container_name: plex
     hostname: plex
-    image: lscr.io/linuxserver/plex:latest
+    image: docker.io/plexinc/pms-docker:latest
     network_mode: "host"
     volumes:
       - /etc/localtime:/etc/localtime:ro
