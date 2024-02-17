@@ -1,38 +1,19 @@
 version: '3'
 
 services:
-  swag:
-    container_name: swag
-    hostname: swag
-    domainname: ${DOMAIN}
-    image: lscr.io/linuxserver/swag
-    cap_add:
-      - NET_ADMIN
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Amsterdam
-      - URL=${DOMAIN}
-      - SUBDOMAINS=${SUBDOMAINS}
-      - VALIDATION=dns
-      - DNSPLUGIN=${DNSPLUGIN}
-      - EMAIL=${EMAIL}
+  watchtower:
+    image: containrrr/watchtower
     volumes:
-      - /config/swag:/config
-    ports:
-      - 443:443
-    #      - 80:80 #optional
-    restart: unless-stopped
+      - /var/run/docker.sock:/var/run/docker.sock
   adguard:
     image: adguard/adguardhome:latest
     container_name: adguard
     hostname: adguard
-    domainname: ${DOMAIN}
     environment:
       - TZ=Europe/Amsterdam
     volumes:
-      - /config/adguard/conf:/opt/adguardhome/conf
-      - /config/adguard/work:/opt/adguardhome/work
+      - /config/conf:/opt/adguardhome/conf
+      - /config/work:/opt/adguardhome/work
     ports:
       - 53:53/tcp # DNS
       - 53:53/udp # DNS
@@ -49,13 +30,3 @@ services:
       #      - 5443:5443/udp # DNSCrypt
       #      - 8853:8853/udp # DNS-over-QUIC
     restart: unless-stopped
-  tunnel:
-    image: cloudflare/cloudflared
-    container_name: cftunnel
-    hostname: cftunnel
-    domainname: ${DOMAIN}
-    restart: unless-stopped
-    command: tunnel run
-    environment:
-      - TZ=Europe/Amsterdam
-      - TUNNEL_TOKEN=${CFTUNNELTOKEN}

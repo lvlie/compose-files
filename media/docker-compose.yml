@@ -1,11 +1,14 @@
 version: '3'
 
 services:
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   sabnzbd:
     container_name: sabnzbd
     hostname: sabnzbd
     image: lscr.io/linuxserver/sabnzbd:latest
-    domainname: ${DOMAIN}
     ports:
       - "8080:8080"
     volumes:
@@ -24,7 +27,6 @@ services:
     container_name: plex
     hostname: plex
     image: lscr.io/linuxserver/plex:latest
-    domainname: ${DOMAIN}
     network_mode: "host"
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -42,11 +44,10 @@ services:
     container_name: tautulli
     hostname: tautulli
     image: lscr.io/linuxserver/tautulli:latest
-    domainname: ${DOMAIN}
     ports:
       - "8181:8181/tcp"
     volumes:
-      - /config/plexpy/:/config
+      - /config/tautulli/:/config
       - /config/plex/Library/Logs/:/logs:ro
     restart: unless-stopped
     environment:
@@ -57,7 +58,6 @@ services:
     container_name: sonarr
     hostname: sonarr
     image: lscr.io/linuxserver/sonarr:latest
-    domainname: ${DOMAIN}
     ports:
       - "8989:8989/tcp"
     volumes:
@@ -75,7 +75,6 @@ services:
     container_name: radarr
     hostname: radarr
     image: lscr.io/linuxserver/radarr:latest
-    domainname: ${DOMAIN}
     ports:
       - "7878:7878/tcp"
     volumes:
@@ -93,7 +92,6 @@ services:
     container_name: bazarr
     hostname: bazarr
     image: lscr.io/linuxserver/bazarr:latest
-    domainname: ${DOMAIN}
     environment:
       - TZ=Europe/Amsterdam
       - PUID=1000
