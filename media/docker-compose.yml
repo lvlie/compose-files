@@ -18,9 +18,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /config/sabnzbd/:/config/
-      - /scratch/incomplete:/incomplete-downloads/
-      - /scratch/complete:/downloads/
-      - /data/:/data
+      - /config/incomplete:/incomplete-downloads/
+      - /config/complete:/downloads/
+      - /data/:/data/
     restart: unless-stopped
     environment:
       - TZ=Europe/Amsterdam
@@ -68,7 +68,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /config/sonarr/:/config/
       - /data/TV/:/tv/
-      - /scratch/complete:/downloads/
+      - /config/complete:/downloads/
     restart: unless-stopped
     environment:
       - TZ=Europe/Amsterdam
@@ -85,7 +85,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /config/radarr/:/config/
       - /data/Movies/:/movies/
-      - /scratch/complete:/downloads/
+      - /config/complete:/downloads/
     restart: unless-stopped
     environment:
       - TZ=Europe/Amsterdam
