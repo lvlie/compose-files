@@ -9,6 +9,20 @@ services:
       - TZ=Europe/Amsterdam
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    hostname: homepage
+    environment:
+      - TZ=Europe/Amsterdam
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - 3000:3000
+    volumes:
+      - /config/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
   sabnzbd:
     container_name: sabnzbd
     hostname: sabnzbd
