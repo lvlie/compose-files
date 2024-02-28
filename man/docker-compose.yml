@@ -36,3 +36,16 @@ services:
       - /config/adguard/conf:/opt/adguardhome/conf
       - /config/adguard/work:/opt/adguardhome/work
     restart: unless-stopped
+  adguard-sync:
+    image: lscr.io/linuxserver/adguardhome-sync:latest
+    container_name: adguard-sync
+    hostname: adguard-sync
+    environment:
+      - TZ=Europe/Amsterdam
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /config/adguard-sync:/config
+    ports:
+      - 8080:8080
+    restart: unless-stopped
