@@ -1,0 +1,133 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0 # Using a recent version
+    hooks:
+    -   id: check-yaml
+        args: [--allow-multiple-documents] # Necessary for webtop/docker-compose.yml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1 # Using a recent version
+    hooks:
+    -   id: yamllint
+        args: [-d "{extends: default, rules: {document-start: disable}}"] # Disable document-start for --- in webtop
+-   repo: local
+    hooks:
+    -   id: docker-compose-validate
+        name: Validate docker-compose files
+        entry: docker-compose # Entry point is just 'docker-compose'
+        language: system
+        files: ^(.*\/)?docker-compose\.yml$ # Regex to match docker-compose.yml files in any directory
+        args: ["-f"] # The filename will be appended by pre-commit after this arg
+        # Then we need to add "config" and "-q"
+        # pre-commit passes the filename as the last argument.
+        # So the command becomes: docker-compose -f <filename> config -q
+        # This is tricky. The 'entry' needs to be a script that can rearrange arguments,
+        # or find a hook that allows more flexible argument/filename placement.
+
+        # Let's try a simpler approach for docker-compose validation first,
+        # assuming pre-commit appends the filename, and see if it works.
+        # The structure for args might need to be `entry: bash -c 'docker-compose -f "$1" config -q' --`
+        # For now, I'll set up a basic structure and refine the docker-compose part.
+        # I will need to create a wrapper script for the docker-compose validation.
+
+# Placeholder for docker-compose validation - will refine this
+# For now, focusing on getting YAML linting right.
+# The docker-compose part will be more complex.
+# I'll create a wrapper script for it in the next step.
+# The args for check-yaml and yamllint are added to handle the '---' at the start of webtop/docker-compose.yml
+# and the postgres multiline string.
+# For yamllint, disabling document-start rule because one file starts with ---
+# For check-yaml, allowing multiple documents for the same reason.
+
+# Revisiting the docker-compose hook.
+# A common pattern for local hooks that need to process filenames:
+# entry: bash -c 'docker-compose -f "$0" config -q'
+# or if pre-commit passes the file as an argument to a script:
+# entry: path/to/script.sh
+# And the script.sh would be: #!/bin/bash docker-compose -f "$1" config -q
+
+# Let's try to create the file with the yamllint and basic hooks first.
+# Then I will create a script for docker-compose and add the local hook for it.
+# This seems like a more robust way.
+
+# For check-yaml, --allow-multiple-documents is needed for files starting with ---
+# For yamllint, I'll configure it to ignore the document-start rule for files starting with ---
+# and also to handle the multiline string in postgres service in man/docker-compose.yml
+# Yamllint config: args: [-d "{extends: default, rules: {document-start: disable, line-length: {max: 120}}}"]
+# The default line length is 80, which might be too short for some comments or volume paths.
+# I'll adjust yamllint args.
+# args: [-d "{extends: default, rules: {document-start: disable, new-line-at-end-of-file: disable, trailing-spaces: disable}}"]
+# The pre-commit hooks already handle end-of-file and trailing-whitespace.
+# Let's use more specific yamllint args:
+# args: [-c .yamllint.yaml] and create a .yamllint.yaml file. This is cleaner.
+# For now, I'll keep it simple and adjust later if basic args don't work.
+
+# Finalizing the initial .pre-commit-config.yaml without the docker-compose script yet.
+# I will add the docker-compose part after this step.
+# The args for check-yaml are needed because webtop/docker-compose.yml starts with '---'
+# which is interpreted as a new document.
+# The args for yamllint are to disable the document-start rule, which conflicts with files starting with '---'.
+# Also relaxing line length for yamllint.
+# args: [-d "{extends: default, rules: {document-start: {present: false}, line-length: {max: 120}}}" ]
+# The document-start rule should be `present: false` if `---` is used. Or just `disable`.
+# I'll use `disable` for `document-start` for now.
+# And I will disable `new-lines` for yamllint as `end-of-file-fixer` handles it.
+
+# Corrected yamllint for document-start issue:
+# The file `webtop/docker-compose.yml` starts with `---` which is a valid YAML document separator.
+# `check-yaml` needs `--allow-multiple-documents`.
+# `yamllint` by default expects a document start `---` if not at the beginning of the stream.
+# If a file *starts* with `---`, it's fine.
+# The issue might be if some files have it and some don't, or if it's not strictly necessary.
+# Let's try with minimal config first for yamllint.
+# If `webtop/docker-compose.yml` is the *only* file starting with `---`, then
+# yamllint default config might be fine. Let's test.
+# Default yamllint config is usually good. I will remove the args for yamllint for now.
+# I will add specific args if the execution shows errors.
+# `check-yaml` args: [--allow-multiple-documents] is correct for webtop/docker-compose.yml
+# as it starts with '---' making it a multi-document file in a sense.
+# I will add a proper docker-compose validation hook later.
+# For now, let's establish the base .pre-commit-config.yaml
+#
+# The docker-compose validation will require a script.
+# I will create `scripts/validate-docker-compose.sh`
+# And then add the local hook.
+#
+# The `entry` for the local hook should be the script path.
+# `entry: scripts/validate-docker-compose.sh`
+# `language: script` (or `system` if it's directly executable and in PATH)
+#
+# Let's refine the initial .pre-commit-config.yaml
+# This version includes the structure for the local docker-compose validation hook,
+# assuming the script `scripts/validate-docker-compose.sh` will be created next.
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+    -   id: check-yaml
+        args: [--allow-multiple-documents] # For webtop/docker-compose.yml starting with ---
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+    -   id: yamllint
+        args: ["--config-file", ".yamllint.yaml"] # Configuration will be in .yamllint.yaml
+# Local hook for Docker Compose validation
+-   repo: local
+    hooks:
+    -   id: docker-compose-validate
+        name: Validate docker-compose files
+        entry: scripts/validate-docker-compose.sh # Script to handle docker-compose config -q
+        language: script # Indicates it's an executable script
+        files: ^(.*\/)?docker-compose\.yml$ # Regex to match docker-compose.yml files
+        # `pass_filenames: true` is default, so the script will receive filenames as arguments.
+        # The script needs to iterate over them.
+        # Or, `files` makes pre-commit run the hook per file.
+        # If `files` regex matches, pre-commit passes the matched file as an argument to `entry`.
+        # So `scripts/validate-docker-compose.sh` will be called with one filename at a time.
+        # Example: scripts/validate-docker-compose.sh man/docker-compose.yml
+        # Example: scripts/validate-docker-compose.sh media/docker-compose.yml
+        # This is good. The script just needs to take $1.
+```

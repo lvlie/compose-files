@@ -1,0 +1,45 @@
+# .yamllint.yaml
+extends: default
+
+rules:
+  # Disable the document-start rule:
+  # Allows YAML files to optionally start with '---'.
+  # webtop/docker-compose.yml starts with '---', others don't.
+  # This provides flexibility, though enforcing consistency might be better long-term.
+  document-start: disable
+
+  # Set a relaxed line length
+  line-length:
+    max: 160  # Default is 80, often too short for Docker Compose files
+    level: warning # Report as warning, not error
+
+  # Other rules can be customized here if needed
+  # Example:
+  # new-line-at-end-of-file: enable (already handled by pre-commit-hooks)
+  # trailing-spaces: enable (already handled by pre-commit-hooks)
+  # indentation:
+  #   spaces: 2 # Default is 2 spaces, which is standard for YAML
+  #   indent-sequences: consistent # Default is true
+  # braces: enable # Forbid flow mappings without surrounding braces
+  # brackets: enable # Forbid flow sequences without surrounding brackets
+  # colons: enable # Check for proper spacing around colons
+  # commas: enable # Check for proper spacing around commas
+  # empty-lines: enable # Check for excessive empty lines
+  # empty-values: disable # Allow empty values for environment variables, etc.
+  # key-duplicates: enable # Check for duplicate keys (critical)
+  # key-ordering: disable # Do not enforce alphabetical key ordering
+  # new-lines: enable # Check for proper new line characters
+  # octal-values: disable # Allow octal values if needed, though generally not recommended
+  # truthy: # Configure what yamllint considers true/false
+  #   allowed-values: ['true', 'false', 'on', 'off', 'yes', 'no']
+  #   check-keys:
+  #     - PUID
+  #     - PGID
+  #     - CONTAINERS
+  #     - SERVICES
+  #     - TASKS
+  #     - POST
+# The truthy check for PUID/PGID (which are numbers) might be problematic.
+# Sticking to minimal necessary changes for now.
+# The main ones are document-start and line-length.
+```

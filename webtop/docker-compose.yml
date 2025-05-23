@@ -1,9 +1,9 @@
 ---
-version: "3"
+version: "3.8"
 
 services:
   webtop:
-    image: lscr.io/linuxserver/webtop:fedora-kde
+    image: lscr.io/linuxserver/webtop:fedora-kde # This is a flavor tag, linuxserver.io images are generally well-maintained
     container_name: webtop
     privileged: false
     security_opt:
