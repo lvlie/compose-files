@@ -1,8 +1,8 @@
-version: '3'
+version: '3.8'
 
 services:
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:1.7.1 # Assuming 1.7.1 as a recent stable version
     container_name: watchtower
     hostname: watchtower
     environment:
@@ -11,7 +11,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
   dockerproxy:
-    image: ghcr.io/tecnativa/docker-socket-proxy:latest
+    image: ghcr.io/tecnativa/docker-socket-proxy:0.7.1 # Assuming 0.7.1 as a recent stable version
     container_name: dockerproxy
     hostname: dockerproxy
     environment:
@@ -26,7 +26,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: unless-stopped
   adguard:
-    image: adguard/adguardhome:latest
+    image: adguard/adguardhome:v0.107.46 # Assuming v0.107.46 as a recent stable version
     container_name: adguard
     hostname: adguard
     environment:
@@ -37,7 +37,7 @@ services:
       - /config/adguard/work:/opt/adguardhome/work
     restart: unless-stopped
   adguard-sync:
-    image: lscr.io/linuxserver/adguardhome-sync:latest
+    image: lscr.io/linuxserver/adguardhome-sync:latest # linuxserver.io images are generally well-maintained with 'latest'
     container_name: adguard-sync
     hostname: adguard-sync
     environment:

@@ -1,0 +1,54 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ] # Assuming 'main' is the default branch
+  pull_request:
+    branches: [ main ] # Assuming 'main' is the default branch
+
+jobs:
+  lint-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pre-commit yamllint
+
+    - name: Install docker-compose (v1 standalone)
+      run: |
+        # Check if docker-compose v1 is already available
+        if command -v docker-compose &> /dev/null; then
+          echo "docker-compose v1 is already installed."
+          docker-compose --version
+          exit 0
+        fi
+        # If not, install it
+        echo "docker-compose v1 not found, installing..."
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+        docker-compose --version
+
+    - name: Run pre-commit checks
+      run: |
+        # Ensure scripts are executable (they should be from git, but good to double check)
+        chmod +x ./scripts/validate-docker-compose.sh
+        pre-commit run --all-files --show-diff-on-failure
+
+    - name: Validate man/docker-compose.yml explicitly
+      run: docker-compose -f man/docker-compose.yml config -q
+
+    - name: Validate media/docker-compose.yml explicitly
+      run: docker-compose -f media/docker-compose.yml config -q
+
+    - name: Validate webtop/docker-compose.yml explicitly
+      run: docker-compose -f webtop/docker-compose.yml config -q
+```
