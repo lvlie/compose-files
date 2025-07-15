@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   watchtower:
-    image: containrrr/watchtower:1.7.1 # Assuming 1.7.1 as a recent stable version
+    image: containrrr/watchtower:latest
     container_name: watchtower
     hostname: watchtower
     environment:
@@ -11,7 +11,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped # Added restart policy
   dockerproxy:
-    image: ghcr.io/tecnativa/docker-socket-proxy:0.7.1 # Assuming 0.7.1 as a recent stable version
+    image: ghcr.io/tecnativa/docker-socket-proxy:latest
     container_name: dockerproxy
     hostname: dockerproxy
     environment:
@@ -26,7 +26,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: unless-stopped
   homepage:
-    image: ghcr.io/gethomepage/homepage:v1.2.0 # Updated to latest stable tag v1.2.0 from GitHub releases
+    image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
     hostname: homepage
     environment:
@@ -42,7 +42,7 @@ services:
   sabnzbd:
     container_name: sabnzbd
     hostname: sabnzbd
-    image: lscr.io/linuxserver/sabnzbd:latest # linuxserver.io images are generally well-maintained with 'latest'
+    image: lscr.io/linuxserver/sabnzbd:latest
     ports:
       - "8080:8080"
     volumes:
@@ -60,7 +60,7 @@ services:
   plex:
     container_name: plex
     hostname: plex
-    image: docker.io/plexinc/pms-docker:1.40.0.7998-c29d4c0c8 # Assuming 1.40.0.7998 as a recent stable version
+    image: docker.io/plexinc/pms-docker:latest
     network_mode: "host"
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -137,4 +137,19 @@ services:
       - /data/Movies/:/movies/
     ports:
       - 6767:6767
+    restart: unless-stopped
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - UMASK_SET=022
+    volumes:
+      - /config/readarr:/config
+      - /data/Books:/books #optional
+      - /config/complete:/downloads #optional
+    ports:
+      - 8787:8787
     restart: unless-stopped
