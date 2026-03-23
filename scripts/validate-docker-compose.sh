@@ -6,6 +6,12 @@ set -e
 
 COMPOSE_FILE="$1"
 
+# Check if the file exists
+if [ ! -f "$COMPOSE_FILE" ]; then
+    echo "Error: File '$COMPOSE_FILE' not found." >&2
+    exit 1
+fi
+
 # Check if docker-compose is installed
 if ! command -v docker-compose &> /dev/null
 then
