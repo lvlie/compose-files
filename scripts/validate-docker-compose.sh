@@ -4,6 +4,12 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
+# Check if an argument was provided
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <docker-compose-file>" >&2
+    exit 1
+fi
+
 COMPOSE_FILE="$1"
 
 # Check if the file exists

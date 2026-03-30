@@ -31,7 +31,11 @@ run_test() {
     local test_name=$3
 
     set +e
-    bash "$VALIDATE_SCRIPT" "$compose_file" > /dev/null 2>&1
+    if [ -z "$compose_file" ]; then
+        bash "$VALIDATE_SCRIPT" > /dev/null 2>&1
+    else
+        bash "$VALIDATE_SCRIPT" "$compose_file" > /dev/null 2>&1
+    fi
     local actual_exit_code=$?
     set -e
 
@@ -61,5 +65,8 @@ run_test "$TEMP_DIR/docker-compose.yml" 1 "docker-compose missing"
 # Case 4: Failure - Provided file does not exist
 create_mock_docker_compose 0
 run_test "$TEMP_DIR/non-existent.yml" 1 "File does not exist"
+
+# Case 5: Failure - No arguments provided
+run_test "" 1 "No arguments provided"
 
 echo "All tests passed!"
