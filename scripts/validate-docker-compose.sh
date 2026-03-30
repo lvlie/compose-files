@@ -22,7 +22,6 @@ fi
 # Validate the Docker Compose file
 # The -q flag suppresses output on success, and errors go to stderr
 if docker-compose -f "$COMPOSE_FILE" config -q; then
-  # echo "Validation successful for $COMPOSE_FILE" # Optional: for verbose success
   exit 0
 else
   echo "Validation failed for $COMPOSE_FILE" >&2
