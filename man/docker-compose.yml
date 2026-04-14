@@ -65,3 +65,13 @@ services:
       - 5432:5432
     restart: unless-stopped
     shm_size: 256mb
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    hostname: open-webui
+    environment:
+      - TZ=Europe/Amsterdam
+      - WEBUI_AUTH_TRUSTED_EMAIL_HEADER=Cf-Access-Authenticated-User-Email
+    volumes:
+      - /data/open-webui:/app/backend/data
+    restart: unless-stopped
